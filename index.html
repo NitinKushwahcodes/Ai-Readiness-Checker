@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Readiness Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <p class="label">Diagnostic Tool</p>
+    <h1>AI Readiness<br /><em>Audit</em></h1>
+    <p class="subtitle">
+      Enter any website URL. We'll analyse it for AI discoverability —
+      how well language models, AI search engines, and retrieval systems
+      can read, understand, and surface your content.
+    </p>
+  </header>
+
+  <main>
+
+    <!-- URL input -->
+    <section class="audit-form">
+      <div class="input-row">
+        <input
+          id="urlInput"
+          class="url-input"
+          type="url"
+          placeholder="https://yoursite.com"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="runBtn" class="run-btn" onclick="runAudit()">
+          Run Audit →
+        </button>
+      </div>
+      <p class="input-note">
+        Analysis runs on publicly available signals. No crawling performed.
+      </p>
+    </section>
+
+    <!-- Results — hidden until audit runs -->
+    <section id="results">
+
+      <div class="results-header">
+        <p class="audited-url">Audited: <span id="displayUrl">—</span></p>
+        <p class="audited-url" id="runTime">—</p>
+      </div>
+
+      <!-- Score ring + label -->
+      <div class="score-block">
+        <div class="ring-wrap">
+          <svg width="112" height="112" viewBox="0 0 112 112">
+            <circle class="ring-bg" cx="56" cy="56" r="46" />
+            <circle class="ring-fill" id="ringFill" cx="56" cy="56" r="46" />
+          </svg>
+          <div class="ring-number" id="scoreDisplay">0</div>
+        </div>
+        <div class="score-meta">
+          <h2 id="scoreLabel">Calculating…</h2>
+          <p id="scoreBlurb"></p>
+        </div>
+      </div>
+
+      <!-- Issues list -->
+      <p class="section-title">Issues Found</p>
+      <div class="issues-list" id="issuesList"></div>
+
+      <!-- Top recommendation -->
+      <div class="rec-strip" id="recStrip">
+        <strong>Priority action</strong>
+        <span id="recText"></span>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    AI Readiness Audit &mdash; Nitin Kushwah &mdash; 2025
+  </footer>
+
+  <script src="audit.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+/* ── reset ───────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── design tokens ───────────────────────────────── */
+
+:root {
+  --bg:           #F4F1EB;
+  --surface:      #FFFFFF;
+  --ink:          #111111;
+  --ink-muted:    #6B6B6B;
+  --green:        #1A7A4A;
+  --green-light:  #E8F5EE;
+  --red:          #C0392B;
+  --red-light:    #FDECEA;
+  --amber:        #B7580A;
+  --amber-light:  #FEF3E2;
+  --border:       #E2DDD5;
+  --mono:         'IBM Plex Mono', monospace;
+  --serif:        'Newsreader', Georgia, serif;
+}
+
+/* ── base ────────────────────────────────────────── */
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  min-height: 100vh;
+  padding: 48px 20px 80px;
+}
+
+/* ── header ──────────────────────────────────────── */
+
+header {
+  max-width: 660px;
+  margin: 0 auto 52px;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+header h1 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 600;
+  line-height: 1.18;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+header h1 em {
+  font-style: italic;
+  color: var(--green);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--ink-muted);
+  line-height: 1.7;
+  max-width: 500px;
+}
+
+/* ── form ────────────────────────────────────────── */
+
+.audit-form {
+  max-width: 660px;
+  margin: 0 auto 40px;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.url-input {
+  flex: 1;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 13px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.15s;
+}
+
+.url-input::placeholder { color: #AEAAA2; }
+.url-input:focus        { border-color: var(--green); }
+.url-input.error        { border-color: var(--red); }
+
+.run-btn {
+  padding: 14px 24px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.run-btn:hover    { background: var(--green); }
+.run-btn:active   { transform: scale(0.97); }
+.run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.input-note {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 8px;
+}
+
+/* ── results section ─────────────────────────────── */
+
+#results {
+  max-width: 660px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(18px);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+#results.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.audited-url      { font-size: 11px; color: var(--ink-muted); }
+.audited-url span { color: var(--ink); font-weight: 500; }
+
+/* ── score ring ──────────────────────────────────── */
+
+.score-block {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  border-radius: 2px;
+}
+
+.ring-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* rotate so the ring starts at the top, not the right */
+.ring-wrap svg { transform: rotate(-90deg); }
+
+.ring-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 6;
+}
+
+.ring-fill {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  /* circumference of r=46 circle → 2 * π * 46 ≈ 289 */
+  stroke-dasharray: 289;
+  stroke-dashoffset: 289;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 0.4s ease;
+}
+
+.ring-number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.score-meta h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.score-meta p {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.7;
+  max-width: 340px;
+}
+
+/* ── issues ──────────────────────────────────────── */
+
+.section-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.issues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.issue-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-radius: 2px;
+  /* start hidden — JS adds .in to trigger slide */
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.issue-card.in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.severity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.sev-high   .severity-dot { background: var(--red); }
+.sev-medium .severity-dot { background: var(--amber); }
+.sev-low    .severity-dot { background: #9CA3AF; }
+
+.issue-title {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.issue-desc {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.65;
+}
+
+.issue-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.sev-high   .issue-tag { background: var(--red-light);   color: var(--red); }
+.sev-medium .issue-tag { background: var(--amber-light); color: var(--amber); }
+.sev-low    .issue-tag { background: #F3F4F6;            color: #6B7280; }
+
+/* ── recommendation strip ────────────────────────── */
+
+.rec-strip {
+  background: var(--green-light);
+  border: 1px solid #A7D9BC;
+  padding: 18px 20px;
+  border-radius: 2px;
+  font-size: 12px;
+  line-height: 1.75;
+  color: #145C38;
+}
+
+.rec-strip strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* ── footer ──────────────────────────────────────── */
+
+footer {
+  text-align: center;
+  font-size: 11px;
+  color: #AEAAA2;
+  margin-top: 64px;
+  letter-spacing: 0.04em;
+}
+
+/* ── responsive ──────────────────────────────────── */
+
+@media (max-width: 520px) {
+  .score-block { flex-direction: column; align-items: flex-start; }
+  .input-row   { flex-direction: column; }
+  .run-btn     { width: 100%; }
+}
